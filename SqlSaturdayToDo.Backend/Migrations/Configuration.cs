@@ -1,6 +1,9 @@
 namespace SqlSaturdayToDo.Backend.Migrations
 {
+    using Microsoft.Azure.Mobile.Server.Tables;
+    using SqlSaturdayToDo.Backend.DataObjects;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -10,22 +13,23 @@ namespace SqlSaturdayToDo.Backend.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            SetSqlGenerator("System.Data.SqlClient", new EntityTableSqlGenerator());
         }
 
         protected override void Seed(SqlSaturdayToDo.Backend.Models.MobileServiceContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            List<TodoItem> todoItems = new List<TodoItem>
+            {
+                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "First item", Complete = false },
+                new TodoItem { Id = Guid.NewGuid().ToString(), Text = "Second item", Complete = false }
+            };
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            foreach (TodoItem todoItem in todoItems)
+            {
+                context.Set<TodoItem>().Add(todoItem);
+            }
+
+            base.Seed(context);
         }
     }
 }
