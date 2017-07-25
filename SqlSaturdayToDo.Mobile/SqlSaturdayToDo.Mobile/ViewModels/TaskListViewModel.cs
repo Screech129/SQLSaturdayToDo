@@ -51,7 +51,8 @@ namespace SqlSaturdayToDo.Mobile.ViewModels
 
             try
             {
-                var table = App.CloudService.GetTable<TodoItem>();
+                await App.CloudService.SyncOfflineCacheAsync();
+                var table = await App.CloudService.GetTableAsync<TodoItem>();
                 var list = await table.ReadAllItemsAsync();
                 Items.Clear();
                 foreach (var item in list.OrderByDescending(i=>i.CreatedAt))

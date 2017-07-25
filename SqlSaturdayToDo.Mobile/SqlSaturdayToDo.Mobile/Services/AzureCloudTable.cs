@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.MobileServices;
+using Microsoft.WindowsAzure.MobileServices.Sync;
 using SqlSaturdayToDo.Mobile.Interfaces;
 using SqlSaturdayToDo.Mobile.Models;
 using System;
@@ -12,12 +13,12 @@ namespace SqlSaturdayToDo.Mobile.Services
     public class AzureCloudTable<T> : ICloudTable<T> where T : TableData
     {
         MobileServiceClient client;
-        IMobileServiceTable<T> table;
+        IMobileServiceSyncTable<T> table;
 
         public AzureCloudTable(MobileServiceClient client)
         {
             this.client = client;
-            this.table = client.GetTable<T>();
+            this.table = client.GetSyncTable<T>();
         }
 
         public async Task<T> CreateItemAsync(T item)
@@ -28,6 +29,7 @@ namespace SqlSaturdayToDo.Mobile.Services
 
         public async Task DeleteItemAsync(T item) => await table.DeleteAsync(item);
 
+
         public async Task<ICollection<T>> ReadAllItemsAsync() => await table.ToListAsync();
 
         public async Task<T> ReadItemAsync(string id) => await table.LookupAsync(id);
@@ -37,5 +39,12 @@ namespace SqlSaturdayToDo.Mobile.Services
             await table.UpdateAsync(item);
             return item;
         }
+
+        public async Task PullAsync()
+        {
+            string queryName = $"incsync_{typeof(T).Name}";
+            await table.PullAsync(queryName, table.CreateQuery());
+        }
+
     }
 }

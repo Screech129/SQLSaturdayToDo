@@ -12,7 +12,7 @@ namespace SqlSaturdayToDo.Mobile.ViewModels
 {
     public class TaskDetailViewModel : BaseViewModel
     {
-        ICloudTable<TodoItem> table = App.CloudService.GetTable<TodoItem>();
+        ICloudTable<TodoItem> table = App.CloudService.GetTableAsync<TodoItem>().Result;
 
         public TaskDetailViewModel(TodoItem item = null)
         {
@@ -41,6 +41,7 @@ namespace SqlSaturdayToDo.Mobile.ViewModels
 
             try
             {
+
                 if (Item.Id == null)
                 {
                     await table.CreateItemAsync(Item);
@@ -49,6 +50,8 @@ namespace SqlSaturdayToDo.Mobile.ViewModels
                 {
                     await table.UpdateItemAsync(Item);
                 }
+                await App.CloudService.SyncOfflineCacheAsync();
+
                 MessagingCenter.Send<TaskDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
@@ -77,6 +80,8 @@ namespace SqlSaturdayToDo.Mobile.ViewModels
                 {
                     await table.DeleteItemAsync(Item);
                 }
+                await App.CloudService.SyncOfflineCacheAsync();
+
                 MessagingCenter.Send<TaskDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
