@@ -9,6 +9,7 @@ using SqlSaturdayToDo.Backend.Models;
 
 namespace SqlSaturdayToDo.Backend.Controllers
 {
+    [Authorize]
     public class TodoItemController : TableController<TodoItem>
     {
         protected override void Initialize(HttpControllerContext controllerContext)

@@ -6,6 +6,9 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using SqlSaturdayToDo.Mobile.Interfaces;
+using Xamarin.Forms;
+using SqlSaturdayToDo.Mobile.Droid.Services;
 
 namespace SqlSaturdayToDo.Mobile.Droid
 {
@@ -18,8 +21,9 @@ namespace SqlSaturdayToDo.Mobile.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
-
+            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
             global::Xamarin.Forms.Forms.Init(this, bundle);
+            ((DroidLoginProvider)DependencyService.Get<ILoginProvider>()).Init(this);
             LoadApplication(new App());
         }
     }

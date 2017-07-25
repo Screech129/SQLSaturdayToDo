@@ -17,7 +17,7 @@ namespace SqlSaturdayToDo.Mobile
         {
             InitializeComponent();
             CloudService = new AzureCloudService();
-            MainPage = new MainPage();// new NavigationPage(new Pages.EntryPage());
+            MainPage = new NavigationPage(new Pages.EntryPage());
         }
 
         protected override void OnStart()

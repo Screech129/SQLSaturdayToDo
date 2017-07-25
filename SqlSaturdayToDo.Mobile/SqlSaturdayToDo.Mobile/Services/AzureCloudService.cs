@@ -5,6 +5,8 @@ using SqlSaturdayToDo.Mobile.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace SqlSaturdayToDo.Backend.Services
 {
@@ -19,6 +21,13 @@ namespace SqlSaturdayToDo.Backend.Services
         public ICloudTable<T> GetTable<T>() where T : TableData
         {
             return new AzureCloudTable<T>(client);
+        }
+
+        public Task LoginAsync()
+        {
+            //Lookup the platofrm dependant login proivder and login with it
+            var loginProvider = DependencyService.Get<ILoginProvider>();
+            return loginProvider.LoginAsync(client);
         }
     }
 }
